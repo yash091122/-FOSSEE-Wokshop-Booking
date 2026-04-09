@@ -33,7 +33,7 @@ const WorkshopListing = () => {
   return (
     <motion.div 
       initial="hidden" animate="visible" exit="exit" variants={containerVariants}
-      className="min-h-screen bg-transparent text-gray-900 pt-32 pb-20"
+      className="min-h-screen bg-transparent text-gray-900 pt-40 pb-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
