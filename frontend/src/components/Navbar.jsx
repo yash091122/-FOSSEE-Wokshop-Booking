@@ -17,10 +17,13 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
         <div className="flex justify-between items-center h-20">
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            className="flex items-center"
+            className="flex items-center gap-3"
           >
-            <Link to="/" className="font-extrabold text-2xl tracking-tighter text-white drop-shadow-sm">
-              FOSSEE<span className="text-[#ff6b00]">.</span>
+            <Link to="/" className="flex items-center gap-2">
+              <img src="/favicon.png" alt="FOSSEE Logo" className="h-10 w-auto" />
+              <span className="font-extrabold text-2xl tracking-tighter text-white drop-shadow-sm">
+                FOSSEE<span className="text-[#ff6b00]">.</span>
+              </span>
             </Link>
           </motion.div>
           
