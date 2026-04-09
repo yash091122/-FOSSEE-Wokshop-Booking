@@ -8,10 +8,10 @@ const AnimatedNavLink = ({ to, children }) => {
   const textSizeClass = 'text-xs font-bold tracking-widest';
 
   return (
-    <Link to={to} className={`group relative inline-block overflow-hidden h-5 flex items-center ${textSizeClass}`}>
+    <Link to={to} className={`group relative inline-block overflow-hidden h-4 flex items-center ${textSizeClass}`}>
       <div className="flex flex-col transition-transform duration-500 ease-out transform group-hover:-translate-y-1/2">
-        <span className={defaultTextColor}>{children}</span>
-        <span className={hoverTextColor}>{children}</span>
+        <span className={`${defaultTextColor} h-4 flex items-center`}>{children}</span>
+        <span className={`${hoverTextColor} h-4 flex items-center`}>{children}</span>
       </div>
     </Link>
   );
