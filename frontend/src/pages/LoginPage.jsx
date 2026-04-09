@@ -24,7 +24,7 @@ const LoginPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20"
+      className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-40"
     >
       <div className="w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#ff6b00] font-bold mb-8 transition-colors">

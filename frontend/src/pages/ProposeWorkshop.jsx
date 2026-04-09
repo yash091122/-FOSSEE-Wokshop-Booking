@@ -30,7 +30,7 @@ const ProposeWorkshop = () => {
   return (
     <motion.div 
       initial="hidden" animate="visible" exit="exit" variants={containerVariants}
-      className="min-h-screen bg-transparent text-gray-900 pt-24 pb-20 relative flex items-center justify-center"
+      className="min-h-screen bg-transparent text-gray-900 pt-40 pb-20 relative flex items-center justify-center"
     >
       <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] bg-orange-100/50 rounded-full blur-[100px] pointer-events-none"></div>
 
