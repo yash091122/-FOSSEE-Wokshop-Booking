@@ -17,7 +17,7 @@ const AnimatedNavLink = ({ to, children }) => {
   );
 };
 
-const Navbar = ({ isAuthenticated, userFullName }) => {
+const Navbar = ({ isAuthenticated, userFullName, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [headerShapeClass, setHeaderShapeClass] = useState('rounded-full');
   const shapeTimeoutRef = useRef(null);
@@ -51,9 +51,13 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
     { label: 'WORKSHOPS', to: '/workshops' },
   ];
 
-  const loginButtonElement = (
+  const loginButtonElement = isAuthenticated ? (
+    <button onClick={onLogout} className="px-5 py-2 text-xs border border-gray-200 bg-white text-gray-500 rounded-full hover:border-red-400 hover:text-red-500 transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest shadow-sm cursor-pointer">
+      LOGOUT
+    </button>
+  ) : (
     <Link to="/login" className="px-5 py-2 text-xs border border-gray-200 bg-white text-gray-500 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest shadow-sm">
-      {isAuthenticated ? "LOGOUT" : "LOGIN"}
+      LOGIN
     </Link>
   );
 

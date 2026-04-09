@@ -1,22 +1,40 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Mail, Lock, ChevronLeft, LogIn } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, Lock, ChevronLeft, LogIn, AlertCircle } from 'lucide-react';
+import api from '../utils/api';
 
-const LoginPage = () => {
+const LoginPage = ({ setAuth }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login Attempt:", formData);
-    alert("Login functionality will be integrated with the Django backend soon!");
+    setIsSubmitting(true);
+    setError('');
+    
+    try {
+      const res = await api.post('auth/login/', formData);
+      if (res.data.user) {
+        setAuth({ isAuthenticated: true, user: res.data.user, loading: false });
+        navigate('/workshops');
+      }
+    } catch (err) {
+      console.error("Login Error:", err);
+      setError(err.response?.data?.error || "Login failed. Please check your credentials.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

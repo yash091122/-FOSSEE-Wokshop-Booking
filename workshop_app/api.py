@@ -44,3 +44,16 @@ class AuthViewSet(viewsets.ViewSet):
             serializer = UserSerializer(user)
             return Response({'user': serializer.data})
         return Response({'error': 'Invalid credentials'}, status=400)
+
+    @action(detail=False, methods=['get'])
+    def check(self, request):
+        if request.user.is_authenticated:
+            serializer = UserSerializer(request.user)
+            return Response({'user': serializer.data})
+        return Response({'user': None})
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        from django.contrib.auth import logout
+        logout(request)
+        return Response({'status': 'logged out'})
