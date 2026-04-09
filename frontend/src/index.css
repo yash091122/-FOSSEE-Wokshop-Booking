@@ -2,22 +2,22 @@
 
 body {
   margin: 0;
-  background-color: #0f0f0f;
-  color: #ffffff;
+  background-color: #f9fafb; /* gray-50 */
+  color: #111827; /* gray-900 */
 }
 
-/* Custom Dark Neumorphic shadow classes */
+/* Custom Light Neumorphic shadow classes */
 @layer utilities {
   .shadow-neu-flat {
-    box-shadow: 6px 6px 12px #060606, -6px -6px 12px #181818;
+    box-shadow: 8px 8px 16px #d1d5db, -8px -8px 16px #ffffff;
   }
   .shadow-neu-pressed {
-    box-shadow: inset 5px 5px 10px #060606, inset -5px -5px 10px #181818;
+    box-shadow: inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff;
   }
   .shadow-neu-hover {
-    box-shadow: 10px 10px 20px #040404, -10px -10px 20px #1a1a1a;
+    box-shadow: 12px 12px 24px #d1d5db, -12px -12px 24px #ffffff;
   }
   .shadow-glass {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
   }
 }

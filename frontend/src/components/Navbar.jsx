@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AnimatedNavLink = ({ to, children }) => {
-  const defaultTextColor = 'text-gray-400';
-  const hoverTextColor = 'text-white';
+  const defaultTextColor = 'text-gray-500';
+  const hoverTextColor = 'text-black';
   const textSizeClass = 'text-xs font-bold tracking-widest';
 
   return (
@@ -52,15 +52,15 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
   ];
 
   const loginButtonElement = (
-    <Link to="/login" className="px-5 py-2 text-xs border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest">
+    <Link to="/login" className="px-5 py-2 text-xs border border-gray-200 bg-white text-gray-500 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest shadow-sm">
       {isAuthenticated ? "LOGOUT" : "LOGIN"}
     </Link>
   );
 
   const primaryButtonElement = (
     <div className="relative group w-full sm:w-auto">
-       <div className="absolute inset-0 -m-1 rounded-full bg-[#ff6b00] opacity-20 filter blur-lg pointer-events-none transition-all duration-300 ease-out group-hover:opacity-40 group-hover:blur-xl group-hover:-m-2"></div>
-       <Link to={isAuthenticated ? "/profile" : "/login"} className="relative z-10 px-6 py-2 text-xs font-black text-black bg-gradient-to-br from-[#ff6b00] to-orange-400 rounded-full hover:from-orange-400 hover:to-orange-500 transition-all duration-200 w-full sm:w-auto text-center block tracking-widest uppercase">
+       <div className="absolute inset-0 -m-1 rounded-full bg-[#ff6b00] opacity-10 filter blur-lg pointer-events-none transition-all duration-300 ease-out group-hover:opacity-30 group-hover:blur-xl group-hover:-m-2"></div>
+       <Link to={isAuthenticated ? "/profile" : "/login"} className="relative z-10 px-6 py-2 text-xs font-black text-white bg-gradient-to-br from-[#ff6b00] to-orange-500 rounded-full hover:from-orange-500 hover:to-orange-600 transition-all duration-200 w-full sm:w-auto text-center block tracking-widest uppercase shadow-md shadow-orange-500/20">
          {isAuthenticated ? userFullName : "JOIN US"}
        </Link>
     </div>
@@ -71,15 +71,15 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
                        flex flex-col items-center
                        pl-6 pr-6 py-3 backdrop-blur-md
                        ${headerShapeClass}
-                       border border-white/10 bg-[#1f1f1f57]
+                       border border-white/50 bg-white/70
                        w-[calc(100%-2rem)] sm:w-auto
-                       transition-[border-radius] duration-300 ease-in-out shadow-2xl shadow-black/50`}>
+                       transition-[border-radius] duration-300 ease-in-out shadow-lg shadow-gray-200/50`}>
 
-      <div className="flex items-center justify-between w-full gap-x-8 sm:gap-x-10">
+      <div className="flex items-center justify-between w-full gap-x-8 sm:gap-x-10 text-gray-900">
         <div className="flex items-center">
            <Link to="/" className="flex items-center gap-2">
               <img src="/favicon.png" alt="FOSSEE Logo" className="h-7 w-auto" />
-              <span className="font-black text-lg tracking-tighter text-white">
+              <span className="font-black text-lg tracking-tighter text-gray-900">
                 FOSSEE<span className="text-[#ff6b00]">.</span>
               </span>
            </Link>
@@ -98,7 +98,7 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
           {primaryButtonElement}
         </div>
 
-        <button className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-300 focus:outline-none" onClick={toggleMenu} aria-label={isOpen ? 'Close Menu' : 'Open Menu'}>
+        <button className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-600 focus:outline-none" onClick={toggleMenu} aria-label={isOpen ? 'Close Menu' : 'Open Menu'}>
           {isOpen ? (
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           ) : (
@@ -117,7 +117,7 @@ const Navbar = ({ isAuthenticated, userFullName }) => {
           >
             <nav className="flex flex-col items-center space-y-5 text-sm w-full pt-8 font-bold tracking-widest uppercase">
               {navLinksData.map((link) => (
-                <Link key={link.to} to={link.to} onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-[#ff6b00] transition-all w-full text-center">
+                <Link key={link.to} to={link.to} onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-[#ff6b00] transition-all w-full text-center">
                   {link.label}
                 </Link>
               ))}

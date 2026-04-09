@@ -17,7 +17,7 @@ const AnimatedRoutes = () => {
         <Route path="/workshops" element={<WorkshopListing />} />
         <Route path="/workshops/:id" element={<WorkshopDetails />} />
         <Route path="/propose" element={<ProposeWorkshop />} />
-        <Route path="*" element={<div className="min-h-screen text-white flex items-center justify-center text-3xl font-bold bg-[#0f0f0f]">404 - Page Not Found</div>} />
+        <Route path="*" element={<div className="min-h-screen text-gray-900 flex items-center justify-center text-3xl font-bold bg-gray-50">404 - Page Not Found</div>} />
       </Routes>
     </AnimatePresence>
   );
@@ -26,7 +26,7 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <Router>
-      <div className="bg-[#0f0f0f] min-h-screen font-sans selection:bg-[#ff6b00] selection:text-black">
+      <div className="bg-gray-50 min-h-screen font-sans selection:bg-[#ff6b00] selection:text-white">
         <Navbar isAuthenticated={false} userFullName="" />
         <AnimatedRoutes />
       </div>
