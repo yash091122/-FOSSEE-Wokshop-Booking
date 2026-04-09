@@ -1,79 +1,135 @@
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Navbar = ({ isAuthenticated, userFullName }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const AnimatedNavLink = ({ to, children }) => {
+  const defaultTextColor = 'text-gray-400';
+  const hoverTextColor = 'text-white';
+  const textSizeClass = 'text-xs font-bold tracking-widest';
 
   return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed w-full z-50 top-0 transition-all duration-300 bg-[#0f0f0f]/80 backdrop-blur-xl border-b border-white/5 shadow-glass"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-3"
-          >
-            <Link to="/" className="flex items-center gap-2">
-              <img src="/favicon.png" alt="FOSSEE Logo" className="h-10 w-auto" />
-              <span className="font-extrabold text-2xl tracking-tighter text-white drop-shadow-sm">
+    <Link to={to} className={`group relative inline-block overflow-hidden h-5 flex items-center ${textSizeClass}`}>
+      <div className="flex flex-col transition-transform duration-500 ease-out transform group-hover:-translate-y-1/2">
+        <span className={defaultTextColor}>{children}</span>
+        <span className={hoverTextColor}>{children}</span>
+      </div>
+    </Link>
+  );
+};
+
+const Navbar = ({ isAuthenticated, userFullName }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [headerShapeClass, setHeaderShapeClass] = useState('rounded-full');
+  const shapeTimeoutRef = useRef(null);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (shapeTimeoutRef.current) {
+      clearTimeout(shapeTimeoutRef.current);
+    }
+
+    if (isOpen) {
+      setHeaderShapeClass('rounded-2xl');
+    } else {
+      shapeTimeoutRef.current = setTimeout(() => {
+        setHeaderShapeClass('rounded-full');
+      }, 300);
+    }
+
+    return () => {
+      if (shapeTimeoutRef.current) {
+        clearTimeout(shapeTimeoutRef.current);
+      }
+    };
+  }, [isOpen]);
+
+  const navLinksData = [
+    { label: 'HOME', to: '/' },
+    { label: 'WORKSHOPS', to: '/workshops' },
+  ];
+
+  const loginButtonElement = (
+    <Link to="/login" className="px-5 py-2 text-xs border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest">
+      {isAuthenticated ? "LOGOUT" : "LOGIN"}
+    </Link>
+  );
+
+  const primaryButtonElement = (
+    <div className="relative group w-full sm:w-auto">
+       <div className="absolute inset-0 -m-1 rounded-full bg-[#ff6b00] opacity-20 filter blur-lg pointer-events-none transition-all duration-300 ease-out group-hover:opacity-40 group-hover:blur-xl group-hover:-m-2"></div>
+       <Link to={isAuthenticated ? "/profile" : "/login"} className="relative z-10 px-6 py-2 text-xs font-black text-black bg-gradient-to-br from-[#ff6b00] to-orange-400 rounded-full hover:from-orange-400 hover:to-orange-500 transition-all duration-200 w-full sm:w-auto text-center block tracking-widest uppercase">
+         {isAuthenticated ? userFullName : "JOIN US"}
+       </Link>
+    </div>
+  );
+
+  return (
+    <header className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50
+                       flex flex-col items-center
+                       pl-6 pr-6 py-3 backdrop-blur-md
+                       ${headerShapeClass}
+                       border border-white/10 bg-[#1f1f1f57]
+                       w-[calc(100%-2rem)] sm:w-auto
+                       transition-[border-radius] duration-300 ease-in-out shadow-2xl shadow-black/50`}>
+
+      <div className="flex items-center justify-between w-full gap-x-8 sm:gap-x-10">
+        <div className="flex items-center">
+           <Link to="/" className="flex items-center gap-2">
+              <img src="/favicon.png" alt="FOSSEE Logo" className="h-7 w-auto" />
+              <span className="font-black text-lg tracking-tighter text-white">
                 FOSSEE<span className="text-[#ff6b00]">.</span>
               </span>
-            </Link>
-          </motion.div>
-          
-          <div className="hidden md:flex space-x-8 items-center">
-            <Link to="/" className="text-sm font-bold tracking-wide text-gray-400 hover:text-white transition-colors">HOME</Link>
-            <Link to="/workshops" className="text-sm font-bold tracking-wide text-gray-400 hover:text-white transition-colors">WORKSHOPS</Link>
-            
-            {isAuthenticated ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-300">{userFullName}</span>
-                <Link to="/profile" className="px-6 py-2.5 rounded-full bg-[#121212] text-white text-sm font-bold hover:text-[#ff6b00] transition-all duration-300 shadow-neu-flat hover:shadow-neu-hover active:shadow-neu-pressed">Profile</Link>
-              </div>
-            ) : (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link to="/login" className="px-6 py-2.5 rounded-full bg-[#ff6b00] text-black text-sm font-bold hover:bg-[#e66000] shadow-[0_4px_14px_rgba(255,107,0,0.4)] transition-all">
-                  JOIN US
-                </Link>
-              </motion.div>
-            )}
-          </div>
-
-          <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-xl text-gray-400 hover:text-white bg-[#121212] shadow-neu-flat active:shadow-neu-pressed focus:outline-none transition-transform">
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+           </Link>
         </div>
+
+        <nav className="hidden sm:flex items-center space-x-8 uppercase">
+          {navLinksData.map((link) => (
+            <AnimatedNavLink key={link.to} to={link.to}>
+              {link.label}
+            </AnimatedNavLink>
+          ))}
+        </nav>
+
+        <div className="hidden sm:flex items-center gap-4">
+          {loginButtonElement}
+          {primaryButtonElement}
+        </div>
+
+        <button className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-300 focus:outline-none" onClick={toggleMenu} aria-label={isOpen ? 'Close Menu' : 'Open Menu'}>
+          {isOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          )}
+        </button>
       </div>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#0f0f0f]/95 backdrop-blur-3xl border-b border-white/10 shadow-xl overflow-hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="sm:hidden flex flex-col items-center w-full overflow-hidden"
           >
-            <div className="px-4 pt-4 pb-6 space-y-3">
-              <Link to="/" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-2xl text-lg font-bold text-gray-300 hover:text-[#ff6b00] bg-[#121212] shadow-neu-flat active:shadow-neu-pressed transition-all">HOME</Link>
-              <Link to="/workshops" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-2xl text-lg font-bold text-gray-300 hover:text-[#ff6b00] bg-[#121212] shadow-neu-flat active:shadow-neu-pressed transition-all">WORKSHOPS</Link>
-              {isAuthenticated ? (
-                <Link to="/profile" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-2xl text-lg font-bold text-gray-300 hover:text-[#ff6b00] bg-[#121212] shadow-neu-flat active:shadow-neu-pressed transition-all">PROFILE</Link>
-              ) : (
-                <Link to="/login" onClick={() => setIsOpen(false)} className="block px-4 py-3 mt-6 rounded-2xl text-lg font-black bg-[#ff6b00] text-black text-center shadow-[0_8px_20px_rgba(255,107,0,0.3)] hover:bg-[#e66000]">JOIN US</Link>
-              )}
+            <nav className="flex flex-col items-center space-y-5 text-sm w-full pt-8 font-bold tracking-widest uppercase">
+              {navLinksData.map((link) => (
+                <Link key={link.to} to={link.to} onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-[#ff6b00] transition-all w-full text-center">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex flex-col items-center space-y-4 mt-8 w-full pb-4">
+              {loginButtonElement}
+              {primaryButtonElement}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </header>
   );
 };
 
