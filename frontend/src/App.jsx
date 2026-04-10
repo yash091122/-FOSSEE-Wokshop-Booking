@@ -6,6 +6,8 @@ import ProposeWorkshop from './pages/ProposeWorkshop';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import HomePage from './pages/HomePage';
+import ActivationPendingPage from './pages/ActivationPendingPage';
+import ActivationPage from './pages/ActivationPage';
 import api from './utils/api';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -22,6 +24,8 @@ const AnimatedRoutes = ({ auth, setAuth }) => {
         <Route path="/propose" element={<ProposeWorkshop />} />
         <Route path="/login" element={<LoginPage setAuth={setAuth} />} />
         <Route path="/register" element={<LoginPage setAuth={setAuth} />} />
+        <Route path="/activation-pending" element={<ActivationPendingPage />} />
+        <Route path="/activate/:key" element={<ActivationPage />} />
         <Route path="/profile" element={<ProfilePage auth={auth} />} />
         <Route path="*" element={<div className="min-h-screen text-gray-900 flex items-center justify-center text-3xl font-bold bg-gray-50 pt-40">404 - Page Not Found</div>} />
       </Routes>

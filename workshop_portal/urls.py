@@ -19,12 +19,13 @@ from django.contrib import admin
 from workshop_portal import views
 from django.conf import settings
 from rest_framework.routers import DefaultRouter
-from workshop_app.api import WorkshopTypeViewSet, WorkshopViewSet, AuthViewSet
+from workshop_app.api import WorkshopTypeViewSet, WorkshopViewSet, AuthViewSet, ProfileViewSet
 
 router = DefaultRouter()
 router.register(r'workshop-types', WorkshopTypeViewSet)
 router.register(r'workshops', WorkshopViewSet)
 router.register(r'auth', AuthViewSet, basename='auth')
+router.register(r'profile', ProfileViewSet, basename='profile')
 
 
 urlpatterns = [

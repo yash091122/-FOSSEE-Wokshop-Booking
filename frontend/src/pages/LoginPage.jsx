@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, ChevronLeft, LogIn, AlertCircle, User, Building, Phone, MapPin, Briefcase } from 'lucide-react';
+import { Mail, Lock, ChevronLeft, User, Building, Phone, MapPin, Briefcase, Info } from 'lucide-react';
 import api from '../utils/api';
 
 const LoginPage = ({ setAuth }) => {
@@ -13,12 +13,15 @@ const LoginPage = ({ setAuth }) => {
     password: '',
     confirm_password: '',
     email: '',
+    title: 'Mr',
     first_name: '',
     last_name: '',
     institute: '',
     department: 'computer engineering',
     phone_number: '',
     state: 'IN-MH',
+    location: '',
+    how_did_you_hear_about_us: 'FOSSEE website',
     position: 'coordinator'
   });
   const [error, setError] = useState('');
@@ -40,6 +43,9 @@ const LoginPage = ({ setAuth }) => {
     if (e.target.name === 'phone_number') {
       value = value.replace(/\D/g, '');
     }
+    if (e.target.name === 'username') {
+      value = value.replace(/[^a-zA-Z0-9_.]/g, '');
+    }
     setFormData({ ...formData, [e.target.name]: value });
     if (error) setError('');
   };
@@ -58,32 +64,80 @@ const LoginPage = ({ setAuth }) => {
     try {
       const endpoint = isRegister ? 'auth/register/' : 'auth/login/';
       const res = await api.post(endpoint, formData);
-      if (res.data.user) {
-        setAuth({ isAuthenticated: true, user: res.data.user, loading: false });
-        navigate('/workshops');
+      
+      if (isRegister) {
+        // Redirection on successful registration
+        if (res.data.status === 'activation_pending') {
+          navigate('/activation-pending');
+        }
+      } else {
+        // Login success
+        if (res.data.user) {
+          setAuth({ isAuthenticated: true, user: res.data.user, loading: false });
+          navigate('/workshops');
+        }
       }
     } catch (err) {
       console.error("Auth Error:", err);
-      setError(err.response?.data?.error || err.response?.data?.detail || "Authentication failed. Please try again.");
+      const errData = err.response?.data;
+      if (errData?.error === 'activation_pending') {
+        navigate('/activation-pending');
+      } else {
+        setError(errData?.error || errData?.detail || "Authentication failed. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const titles = [
+    { value: "Professor", label: "Prof." },
+    { value: "Doctor", label: "Dr." },
+    { value: "Shriman", label: "Shri" },
+    { value: "Shrimati", label: "Smt." },
+    { value: "Kumari", label: "Ku." },
+    { value: "Mr", label: "Mr." },
+    { value: "Mrs", label: "Mrs." },
+    { value: "Miss", label: "Ms." }
+  ];
 
   const departments = [
     { value: "computer engineering", label: "Computer Science" },
     { value: "information technology", label: "Information Technology" },
     { value: "civil engineering", label: "Civil Engineering" },
     { value: "electrical engineering", label: "Electrical Engineering" },
-    { value: "mechanical engineering", label: "Mechanical Engineering" }
+    { value: "mechanical engineering", label: "Mechanical Engineering" },
+    { value: "chemical engineering", label: "Chemical Engineering" },
+    { value: "aerospace engineering", label: "Aerospace Engineering" },
+    { value: "biosciences and bioengineering", label: "BioEngineering" },
+    { value: "electronics", label: "Electronics" },
+    { value: "energy science and engineering", label: "Energy" }
   ];
 
   const states = [
-    { value: "IN-MH", label: "Maharashtra" },
-    { value: "IN-DL", label: "Delhi" },
-    { value: "IN-KA", label: "Karnataka" },
-    { value: "IN-TN", label: "Tamil Nadu" },
-    { value: "IN-GJ", label: "Gujarat" }
+    { value: "IN-AP", label: "Andhra Pradesh" }, { value: "IN-AR", label: "Arunachal Pradesh" },
+    { value: "IN-AS", label: "Assam" }, { value: "IN-BR", label: "Bihar" },
+    { value: "IN-CT", label: "Chhattisgarh" }, { value: "IN-GA", label: "Goa" },
+    { value: "IN-GJ", label: "Gujarat" }, { value: "IN-HR", label: "Haryana" },
+    { value: "IN-HP", label: "Himachal Pradesh" }, { value: "IN-JK", label: "Jammu and Kashmir" },
+    { value: "IN-JH", label: "Jharkhand" }, { value: "IN-KA", label: "Karnataka" },
+    { value: "IN-KL", label: "Kerala" }, { value: "IN-MP", label: "Madhya Pradesh" },
+    { value: "IN-MH", label: "Maharashtra" }, { value: "IN-MN", label: "Manipur" },
+    { value: "IN-ML", label: "Meghalaya" }, { value: "IN-MZ", label: "Mizoram" },
+    { value: "IN-NL", label: "Nagaland" }, { value: "IN-OR", label: "Odisha" },
+    { value: "IN-PB", label: "Punjab" }, { value: "IN-RJ", label: "Rajasthan" },
+    { value: "IN-SK", label: "Sikkim" }, { value: "IN-TN", label: "Tamil Nadu" },
+    { value: "IN-TG", label: "Telangana" }, { value: "IN-TR", label: "Tripura" },
+    { value: "IN-UT", label: "Uttarakhand" }, { value: "IN-UP", label: "Uttar Pradesh" },
+    { value: "IN-WB", label: "West Bengal" }, { value: "IN-DL", label: "Delhi" },
+    { value: "IN-CH", label: "Chandigarh" }, { value: "IN-AN", label: "Andaman and Nicobar" }
+  ];
+
+  const sources = [
+    { value: "FOSSEE website", label: "FOSSEE website" },
+    { value: "Google", label: "Google" },
+    { value: "Social Media", label: "Social Media" },
+    { value: "From other College", label: "From other College" }
   ];
 
   return (
@@ -152,38 +206,51 @@ const LoginPage = ({ setAuth }) => {
             {isRegister && (
                <div className="space-y-6">
                  <div className="space-y-2">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">First Name</label>
+                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Title</label>
                    <div className="relative group">
                      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff6b00] transition-colors pointer-events-none">
                        <User className="w-4 h-4" />
                      </div>
-                     <input 
-                       type="text" 
-                       name="first_name"
-                       value={formData.first_name}
+                     <select 
+                       name="title"
+                       value={formData.title}
                        onChange={handleChange}
-                       placeholder="First Name"
-                       required
-                       className="w-full bg-gray-50 text-gray-900 rounded-full pl-12 pr-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm"
-                     />
+                       className="w-full bg-gray-50 text-gray-900 rounded-full pl-12 pr-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm appearance-none cursor-pointer"
+                     >
+                       {titles.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                     </select>
                    </div>
                  </div>
-                 <div className="space-y-2">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Last Name</label>
-                   <div className="relative group">
-                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff6b00] transition-colors pointer-events-none">
-                       <User className="w-4 h-4" />
+                 
+                 <div className="grid grid-cols-2 gap-4">
+                     <div className="space-y-2">
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">First Name</label>
+                       <div className="relative group">
+                         <input 
+                           type="text" 
+                           name="first_name"
+                           value={formData.first_name}
+                           onChange={handleChange}
+                           placeholder="First Name"
+                           required
+                           className="w-full bg-gray-50 text-gray-900 rounded-full px-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm"
+                         />
+                       </div>
                      </div>
-                     <input 
-                       type="text" 
-                       name="last_name"
-                       value={formData.last_name}
-                       onChange={handleChange}
-                       placeholder="Last Name"
-                       required
-                       className="w-full bg-gray-50 text-gray-900 rounded-full pl-12 pr-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm"
-                     />
-                   </div>
+                     <div className="space-y-2">
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Last Name</label>
+                       <div className="relative group">
+                         <input 
+                           type="text" 
+                           name="last_name"
+                           value={formData.last_name}
+                           onChange={handleChange}
+                           placeholder="Last Name"
+                           required
+                           className="w-full bg-gray-50 text-gray-900 rounded-full px-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm"
+                         />
+                       </div>
+                     </div>
                  </div>
                </div>
             )}
@@ -247,19 +314,51 @@ const LoginPage = ({ setAuth }) => {
                      </select>
                    </div>
                  </div>
+                 
+                 <div className="grid grid-cols-2 gap-4">
+                     <div className="space-y-2">
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">State</label>
+                       <div className="relative group">
+                         <select 
+                           name="state"
+                           value={formData.state}
+                           onChange={handleChange}
+                           className="w-full bg-gray-50 text-gray-900 rounded-full px-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm appearance-none cursor-pointer"
+                         >
+                           {states.map(state => <option key={state.value} value={state.value}>{state.label}</option>)}
+                         </select>
+                       </div>
+                     </div>
+                     
+                     <div className="space-y-2">
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Location/City</label>
+                       <div className="relative group">
+                         <input 
+                           type="text" 
+                           name="location"
+                           value={formData.location}
+                           onChange={handleChange}
+                           placeholder="City"
+                           required
+                           className="w-full bg-gray-50 text-gray-900 rounded-full px-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm"
+                         />
+                       </div>
+                     </div>
+                 </div>
+                 
                  <div className="space-y-2">
-                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">State</label>
+                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">How did you hear about us?</label>
                    <div className="relative group">
                      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff6b00] transition-colors pointer-events-none">
-                       <MapPin className="w-4 h-4" />
+                       <Info className="w-4 h-4" />
                      </div>
                      <select 
-                       name="state"
-                       value={formData.state}
+                       name="how_did_you_hear_about_us"
+                       value={formData.how_did_you_hear_about_us}
                        onChange={handleChange}
                        className="w-full bg-gray-50 text-gray-900 rounded-full pl-12 pr-6 py-4 shadow-neu-pressed border-none outline-none focus:ring-2 focus:ring-[#ff6b00]/30 transition-all font-bold text-sm appearance-none cursor-pointer"
                      >
-                       {states.map(state => <option key={state.value} value={state.value}>{state.label}</option>)}
+                       {sources.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                      </select>
                    </div>
                  </div>
@@ -308,7 +407,7 @@ const LoginPage = ({ setAuth }) => {
 
             {error && (
               <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-3 text-sm font-bold animate-shake">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" /> {error}
+                <Info className="w-5 h-5 flex-shrink-0" /> {error}
               </div>
             )}
 
