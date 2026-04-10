@@ -61,9 +61,9 @@ const HomePage = () => {
                 </span>
                 <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-[150%] skew-x-12 group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out"></div>
               </Link>
-              <button className="px-8 py-4 rounded-full bg-gray-50 text-gray-800 font-bold text-lg hover:text-[#ff6b00] shadow-neu-flat active:shadow-neu-pressed transition-all flex items-center justify-center gap-3">
+              <a href="https://www.youtube.com/user/FOSSEEProject" target="_blank" rel="noopener noreferrer" className="px-8 py-4 rounded-full bg-gray-50 text-gray-800 font-bold text-lg hover:text-[#ff6b00] shadow-neu-flat active:shadow-neu-pressed transition-all flex items-center justify-center gap-3">
                 <Play className="w-5 h-5 text-[#ff6b00]" /> Watch Demo
-              </button>
+              </a>
             </motion.div>
             
             <motion.div variants={fadeUp} className="mt-12 flex items-center gap-6">
@@ -133,8 +133,8 @@ const HomePage = () => {
             
             {/* Floating Badges */}
             <motion.div animate={{ y: [10, -10, 10] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} className="absolute -left-12 top-20 bg-gray-50 p-5 rounded-2xl shadow-neu-flat flex items-center gap-4">
-              <div className="w-10 h-10 shadow-neu-pressed rounded-full flex items-center justify-center font-bold text-gray-800">P</div>
-              <p className="font-black text-sm text-gray-800">Python Labs</p>
+              <div className="w-10 h-10 shadow-neu-pressed rounded-full flex items-center justify-center font-black text-xl text-[#00d8ff]">✦</div>
+              <p className="font-black text-sm text-gray-800">React Labs</p>
             </motion.div>
             <motion.div animate={{ y: [-15, 15, -15] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} className="absolute -right-6 bottom-20 bg-gray-50 p-5 rounded-2xl shadow-neu-flat flex items-center gap-4">
               <div className="w-10 h-10 bg-[#ff6b00] rounded-full flex items-center justify-center font-bold text-white text-lg shadow-lg">✦</div>

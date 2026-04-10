@@ -56,7 +56,7 @@ const Navbar = ({ isAuthenticated, userFullName, onLogout }) => {
       LOGOUT
     </button>
   ) : (
-    <Link to="/login" className="px-5 py-2 text-xs border border-gray-200 bg-white text-gray-500 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest shadow-sm">
+    <Link to="/login" state={{ isRegister: false }} className="px-5 py-2 text-xs border border-gray-200 bg-white text-gray-500 rounded-full hover:border-[#ff6b00]/50 hover:text-[#ff6b00] transition-colors duration-200 w-full sm:w-auto text-center font-bold tracking-widest shadow-sm">
       LOGIN
     </Link>
   );
@@ -64,7 +64,7 @@ const Navbar = ({ isAuthenticated, userFullName, onLogout }) => {
   const primaryButtonElement = (
     <div className="relative group w-full sm:w-auto">
        <div className="absolute inset-0 -m-1 rounded-full bg-[#ff6b00] opacity-10 filter blur-lg pointer-events-none transition-all duration-300 ease-out group-hover:opacity-30 group-hover:blur-xl group-hover:-m-2"></div>
-       <Link to={isAuthenticated ? "/profile" : "/login"} className="relative z-10 px-6 py-2 text-xs font-black text-white bg-gradient-to-br from-[#ff6b00] to-orange-500 rounded-full hover:from-orange-500 hover:to-orange-600 transition-all duration-200 w-full sm:w-auto text-center block tracking-widest uppercase shadow-md shadow-orange-500/20">
+       <Link to={isAuthenticated ? "/profile" : "/login"} state={!isAuthenticated ? { isRegister: true } : undefined} className="relative z-10 px-6 py-2 text-xs font-black text-white bg-gradient-to-br from-[#ff6b00] to-orange-500 rounded-full hover:from-orange-500 hover:to-orange-600 transition-all duration-200 w-full sm:w-auto text-center block tracking-widest uppercase shadow-md shadow-orange-500/20">
          {isAuthenticated ? userFullName : "JOIN US"}
        </Link>
     </div>
